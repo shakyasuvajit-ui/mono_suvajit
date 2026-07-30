@@ -4,7 +4,6 @@
     "slug": "default@54",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "default54",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

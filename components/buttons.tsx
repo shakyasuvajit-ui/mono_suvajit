@@ -1,13 +1,14 @@
-import { Pressable, PressableProps, StyleSheet, Text, ViewStyle } from "react-native"
+import { Pressable, PressableProps, StyleSheet, Text, ViewStyle, TextStyle, StyleProp } from "react-native"
 
 type Props = PressableProps & {
     title: string
     type: 'primary' | 'secondary' | 'outline' | 'danger' | 'disabled'
+    textStyle?: StyleProp<TextStyle>
 }
 
 const buttonStyles: Record<Props['type'], ViewStyle> = {
     primary: {
-        backgroundColor: 'blue',
+        backgroundColor: 'lightblue',
     },
     secondary: {
         backgroundColor: 'green',
@@ -40,11 +41,10 @@ const styles = StyleSheet.create({
     }
 })
 
-export function Button({ title, type = 'primary', ...props }: Props) {
-    
+export function Button({ title, type = 'primary', style, textStyle, ...props }: Props) {
     return (
-        <Pressable style={[buttonStyles[type], styles.common ]} {...props}>
-            <Text style={styles.text}>{title}</Text>
+        <Pressable style={[styles.common, buttonStyles[type], style]as StyleProp<ViewStyle>} {...props}>
+            <Text style={[styles.text, textStyle]}>{title}</Text>
         </Pressable>
     )
 }
