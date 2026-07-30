@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { Image } from "expo-image";
 import Background from '@/assets/svg/onboarding_bg.svg';
 import { Button } from '@/components/buttons';
@@ -18,30 +18,38 @@ const styles = StyleSheet.create({
   },
   button:{
     backgroundColor:"#549B96",
-            paddingHorizontal: 30,
-            paddingVertical: 12,
-            margin:10,
-            borderRadius: 30,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderColor:"black",
-            borderWidth:1.5,
-            boxShadow: "0px 6px 16px -3px rgba(0,0,0,0.46)",
-            height:61,
-            marginTop:80,
+    // paddingVertical: 12,
+    // margin:10,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor:"black",
+    borderWidth:1,
+    boxShadow: "0px 6px 16px -3px rgba(0,0,0,0.46)",
+    height:55,
+    alignSelf:'center',
+    width:'90%',
+    marginTop:50,
 
   },
   buttonTitle: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
-  }
-  
+  },
+  textblwbtn:{
+    marginTop:10,
+    textAlign:"center",
+    fontSize:14,},
+    logintxt:{
+      color:"#428581",
+    }
 });
 
-const router = useRouter();
+
 
 export default function Index() {
+  const router = useRouter();
   return (
     <View>
     <View>
@@ -52,6 +60,7 @@ export default function Index() {
     </View>
       <SafeAreaView>
           <Button title="Get Started" type="primary" style={styles.button} textStyle={styles.buttonTitle} onPress={() => router.push('/tabs/profile')} />
+            <Text style={styles.textblwbtn}>Already have an account? <Text style={styles.logintxt}>Log in</Text></Text>
       </SafeAreaView>
     </View>
   )

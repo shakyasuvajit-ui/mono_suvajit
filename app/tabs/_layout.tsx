@@ -4,6 +4,8 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Octicons from '@expo/vector-icons/Octicons';
 export default function TabLayout() {
 return (
   <Tabs
@@ -25,7 +27,16 @@ return (
         options={{
           title: 'Homepage',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="grid-outline" size={28} color={color} />
+            <Octicons name="home" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="statistics"
+        options={{
+          title: 'Statistics',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="signal-cellular-3" size={28} color={color} />
           ),
         }}
       />
