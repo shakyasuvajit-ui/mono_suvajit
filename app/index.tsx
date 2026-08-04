@@ -30,12 +30,8 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     width:'90%',
     marginTop:50,
+    color:"black", 
 
-  },
-  buttonTitle: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   textblwbtn:{
     marginTop:10,
@@ -59,7 +55,7 @@ export default function Index() {
         style={styles.logo} />
     </View>
       <SafeAreaView>
-          <Button title="Get Started" type="primary" style={styles.button} textStyle={styles.buttonTitle} onPress={() => router.push('/tabs/profile')} />
+          <Button title="Get Started" type="primary" style={styles.button} onPress={() => router.push('/signup')} />
             <Text style={styles.textblwbtn}>Already have an account? <Text style={styles.logintxt}>Log in</Text></Text>
       </SafeAreaView>
     </View>
