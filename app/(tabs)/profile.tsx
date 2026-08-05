@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import { Image } from "expo-image";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Background from '@/assets/svg/prof_bg.svg';
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 });
 export default function Profile() {
     return (
-        <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+        <ScrollView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
             <View style={{position: "relative", height: 220}}>
                 {/* background with overlay */}
                 <Background preserveAspectRatio="none" style={StyleSheet.absoluteFillObject}/>
@@ -141,7 +141,7 @@ export default function Profile() {
                     <Text style={styles.profile_text}> Data and privacy</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
         //  </View>
 
     )

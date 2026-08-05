@@ -2,9 +2,14 @@ import Background from '@/assets/svg/onboarding_bg.svg';
 import { Button } from '@/components/buttons';
 import { InputField } from '@/components/input-field';
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import Toast from 'react-native-toast-message';
+import { signIn } from "@/services/firebase";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { BackButton } from "@/components/back-button";
+
 
 
 const style = StyleSheet.create({
@@ -18,27 +23,23 @@ const style = StyleSheet.create({
     left: 14,
   },
   topContainer:{
-    position: "absolute",
-    top: 90,
-    left: 20,
+    paddingHorizontal: 14,
   },
     toptext:{ 
-        fontSize: 25,
+        fontSize: 24,
         fontWeight: '600',
         color: "black",
       
     },
     topbelowtext:{
-        fontSize: 15,
-        color:"#5A8C88",
-        paddingTop: 10,
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#5A8C88',
+        marginTop: 8,
     },
     inputs:{
-        position: "absolute",
-        top: 250,
-        alignSelf: "center",
-        width: "90%",
-        left:20
+        padding: 18,
+        gap: 24,
     },
     inputfield:{
         marginTop: 10,
@@ -55,43 +56,83 @@ const style = StyleSheet.create({
         top: -52,
     },
     link:{
-        color:"#549B96",
-        fontWeight: '400',
-        fontSize: 14,
-        alignItems: "center",
+        color: "#438883",
+        fontSize: 16,
+        textDecorationLine: "underline",
     },
     blwbtntext:{
-        position: "relative",
-        top: -36,
+        color: "#444444",
+        fontSize: 16,
+    },
+    logincontainer:{
         alignItems: "center",
-        alignSelf: "center",
+        marginTop: 8,
+        flexDirection: "row",
+        justifyContent: 'center',
     }
 
 });
 
-export default function Signup() {
+export default function Login() {
     const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [fieldsError, setFieldsError] = useState({
+        email: '',
+        password: '',
+    });
+    const handleSignIn = async () => {
+        try {
+            if (!email || !password) {
+                setFieldsError({
+                    email: !email ? 'Email is required' : '',
+                    password: !password ? 'Password is required' : '',
+                });
+                return;
+            }
+            setFieldsError({
+                email: '',
+                password: '',
+            });
+            setIsLoading(true);
+            const user = await signIn(email, password);
+            console.log("user", user);
+            router.push('/tabs/profile');
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: "Invalid email or password!",
+            })
+        } finally {
+            setIsLoading(false);
+        }
+    }
     return (
     <View style={style.container}>
-        <Background/>
-        <View style={style.top}>
-            <AntDesign name="left" size={24} color="black" />
+        <View style={{position: "absolute", top: 0, left: 0, right: 0, bottom: 0,}}>
+            <Background/>
+        </View>
+        <SafeAreaView>
+        <View>
+            <BackButton />
         </View>
         <View style={style.topContainer}>
-            <Text style={style.toptext}>Create</Text>
-            <Text style={style.toptext}>Account ✨</Text>
-            <Text style={style.topbelowtext}>Join to start tracking your finances</Text>
+            <Text style={style.toptext}>Welcome</Text>
+            <Text style={style.toptext}>back 👋</Text>
+            <Text style={style.topbelowtext}>Sign in to your account to continue</Text>
         </View>
         <View style={style.inputs}>
-            <InputField placeholder="Jane Doe"  label='Full Name' style={style.inputfield}/>
-            <InputField placeholder="jane.doe@example.com" label='Email Address' style={style.inputfield}/>
-            <InputField placeholder="Create a strong password" label='Password' style={style.inputfield}/>
+            <InputField label="Email" autoCapitalize="none" placeholder="Enter your email" value={email} onChangeText={setEmail} error={fieldsError.email}/>
+            <InputField label="Password" autoCapitalize="none" placeholder="Enter your password" value={password} onChangeText={setPassword} secureTextEntry error={fieldsError.password}/>
+            <Button title="Sign In" type="primary" onPress={handleSignIn} disabled={isLoading} loading={isLoading} />
+        
+        <View style={style.logincontainer}>
+            <Text style={style.blwbtntext}>Dont have an account?</Text> 
+            <Link style={style.link} href="/signup">Sign Up</Link>
+        </View>        
         </View>
-        <View>
-            <Button title="Create Account" style={style.button} onPress={() => router.push('/login')}/>
-                <Text style={style.blwbtntext}>Already have an account? <Text style={style.link} onPress={() => router.push('/login')}>Login</Text>
-                </Text>
-        </View>
+        </SafeAreaView>
     </View>
   );
 }

@@ -1,12 +1,10 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { FirebaseApp, getApp, getApps, initializeApp } from "firebase/app";
+import { Auth, createUserWithEmailAndPassword, getAuth, initializeAuth, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseAuth = require("firebase/auth");
+const persistence = typeof firebaseAuth?.getReactNativePersistence === "function" ? firebaseAuth.getReactNativePersistence(ReactNativeAsyncStorage) : undefined;
+
 const firebaseConfig = {
   apiKey: "AIzaSyDrRh_bgBY59e59t7QR0xdW8WzR5A3mclw",
   authDomain: "mono-suvajit.firebaseapp.com",
@@ -17,14 +15,39 @@ const firebaseConfig = {
   measurementId: "G-VV2J376NKK"
 };
 
+let app: FirebaseApp | null = null;
+let auth: Auth;
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth=getAuth(app);
-export function signUp(email: string, password: string) {
-  return createUserWithEmailAndPassword(auth, email, password);
+export function initializeFirebase() {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+  try {
+    auth = initializeAuth(app, { persistence });
+  } catch (error) {
+    console.log("Error initializing auth", error);
+    auth = getAuth(app);
+  }
+  return { app, auth };
+}
+
+
+export function signUp(fullName: string, email: string, password: string) {
+  return createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+    return updateProfile(userCredential.user, { displayName: fullName }).then(() => {
+      return userCredential;
+    });
+  });
 }
 
 export function signIn(email: string, password: string) {
   return signInWithEmailAndPassword(auth, email, password);
 }
+
+export function getCurrentUser() {
+  return auth.currentUser;
+}
+
+export function signOut() {
+  return signOut();
+}
+
+export { app, auth };
