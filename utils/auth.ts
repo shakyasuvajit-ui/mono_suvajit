@@ -1,9 +1,11 @@
 import { getCurrentUser } from "@/services/firebase";
+import { User } from "firebase/auth";
 
-export function assertUserAuthenticated() {
-    const user=getCurrentUser();
-    if (!user) {
-        throw new Error("User is not authenticated");
+
+export function assertUserAuthenticated(): User {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        throw new Error('User not authenticated');
     }
-    return user;
+    return currentUser;
 }

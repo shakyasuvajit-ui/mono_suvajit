@@ -1,10 +1,13 @@
-import { TouchableOpacity, StyleSheet, Text, View, ScrollView, ImageSourcePropType, Image } from "react-native";
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+
+
 import PageBackground from "@/assets/svg/page_bg.svg";
 import { BackButton } from "@/components/back-button";
+import { TransactionItem } from "@/components/transaction";
+import { Transaction, useTransactions } from "@/services/transactions";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFocusEffect, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import  Add  from "@/assets/svg/add_logo.svg";
-import  Pay  from "@/assets/svg/pay_logo.svg";
-import { router } from "expo-router";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +23,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
   },
   headerTitle: {
     color: 'white',
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     textAlign: 'center',
     flex: 1,
-    marginRight: 48
+    marginRight: 46
   },
   transactionsContainer: {
     flex: 1,
@@ -36,197 +38,97 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 16,
-    marginTop: 59,
+    marginTop: 50,
   },
-  balanceContainer: {
+
+  totalBalanceContainer: {
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop:30,
   },
-  balanceTitle: {
+
+  totalBalanceTitle: {
     fontSize: 16,
-    color:"#666666",
-    marginBottom: 12,
-  },
-  balanceAmount: {
-    fontSize:30,
-  fontWeight: '700',
-},
-  transactionsLogoContainer:{
-    alignItems: 'center',
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    marginTop:40
-  },
-  addLogoContainer:{
-    alignItems: 'center',
-    marginRight: 15,
-
-  },
-  payLogoContainer:{
-    alignItems: 'center',
-    marginLeft: 15,
-  },
-  
-  selectionContainer:{
-      width: '100%',
-      marginTop: 60,
-    },
-  selectionOption:{
-    backgroundColor: '#F4F6F6',
-     height:48,
-      borderRadius: 40, 
-  },
-  transactions:{
-    alignSelf: 'center',
-    width: '100%',
-    marginTop: 25,
-    height: "100%",
-  },
-  iconContainer:{
-    width:50, 
-    height:50,
-    backgroundColor: '#F0F6F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-
-  },
-  transactionContainer:{
-    flexDirection: 'row',
-    marginBottom: 16,
-    alignItems: 'center',
-  },
-  transactionNameandDate:{
-    alignItems:"flex-start",
-    flexDirection: 'column',
-    marginLeft: 9,
-
-  },
-  transactionTitle:{
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  transactionDate:{
-    fontSize: 13,
-    fontWeight: '400',
+    fontWeight: 'regular',
     color: '#666666',
   },
-  transactionAmount:{
-    fontSize: 18,
-    fontWeight: '600',
-    alignItems: 'center',
-    flex: 1,
-    textAlign: 'right',
+  totalBalance: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#222222',
   },
-  positiveAmount:{
-    color:"#25A969"
-  },
-  negativeAmount:{
-    color:"#F95B51"
-  }
 
-  
+  addTransactionButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    marginTop: 16,
+  },
+  addTransactionButton: {
+    padding: 16,
+    borderRadius: '50%',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#2F7E79'
+  },
+  transactionsListContainer: {
+    gap: 8,
+    paddingHorizontal: 12,
+  },
 });
 
 
 export default function Expense() {
-    // const router = useRouter();
+  const { transactions, loading, error, loadTransactions } = useTransactions();
+
+  useFocusEffect(() => {
+    loadTransactions();
+  });
   return (
     <View style={styles.container} >
       <PageBackground style={styles.headerBackground} />
-      <SafeAreaView style={styles.container} >
-        <View style={styles.headerContainer} >
-          <BackButton type="light" />
-          <Text style={styles.headerTitle}>Transactions</Text>
-        </View>
-        <View style={styles.transactionsContainer} >
-          <View style={styles.balanceContainer}>
-            <Text style={styles.balanceTitle}>Total Balance</Text>
-            <Text style={styles.balanceAmount}>$2,548.00</Text>
-        </View>
-          <View style={styles.transactionsLogoContainer}>
-            <TouchableOpacity style={styles.addLogoContainer} onPress={() => router.push('/expense/index')}>
-              <Add/>
-              <Text>Add</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.payLogoContainer}>
-              <Pay/>
-              <Text>Pay</Text>
-            </TouchableOpacity>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={loadTransactions} />
+      }>
+        <SafeAreaView edges={['top']} style={styles.container} >
+          <View style={styles.headerContainer} >
+            <BackButton type="light" />
+            <Text style={styles.headerTitle}>Transactions</Text>
           </View>
-          <View style={styles.selectionContainer}>
-            <View style={styles.selectionOption}></View>
-          </View>
-          <ScrollView style={styles.transactions}>
-              <TransactionMenus/>
-          </ScrollView>
-        </View>
-      </SafeAreaView>
+          <Transactions transactions={transactions} />
+        </SafeAreaView>
+      </ScrollView>
     </View>
   );
 }
-function TransactionMenus() {
-  const items: { title: string, icon: ImageSourcePropType, date:string, amount:string, onPress: () => void }[]=[
-  {
-    title:"Upwork",
-    icon: require('@/assets/svg/images/upwork.png'),
-    date: "Today",
-    amount: "+$850.00",
-    onPress: () =>{ console.log("Upwork pressed") }
-  },
-  {
-  title:"Transfer",
-    icon: require('@/assets/svg/images/transfer.png'),
-    date: "Yesterday",
-    amount: "-$85.00",
-    onPress: () =>{ console.log("Transfer pressed") }},
-  {
-  title:"Paypal",
-    icon: require('@/assets/svg/images/paypal.png'),
-    date: "Jan 30, 2022",
-    amount: "+$1,406.00",
-    onPress: () =>{ console.log("Paypal pressed") }},
-   {
-  title:"Youtube",
-    icon: require('@/assets/svg/images/youtube.png'),
-    date: "Jan 16, 2022",
-    amount: "-$17.99",
-    onPress: () =>{ console.log("Youtube pressed") }} 
-]
-  return (
-      <View>{
-        items.map((item, index) => {
-          const isIncome = item.amount.trim().startsWith('+');
 
-          return (
-            <TouchableOpacity key={index} onPress={item.onPress} style={styles.transactionContainer}>
-              <View style={styles.iconContainer}>
-                <Image source={item.icon}/>
-              </View>
-              <View style={styles.transactionNameandDate}>
-                <Text style={styles.transactionTitle}>{item.title}</Text>
-                <Text style={styles.transactionDate}>{item.date}</Text>
-              </View>
-              <Text style={[styles.transactionAmount, isIncome ? styles.positiveAmount : styles.negativeAmount]}>{item.amount}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-  );
-}
-function TransactionMenu({title, icon, date, amount, onpress }:{title:string, icon:ImageSourcePropType, date:string, amount:string, onpress: () => void}) {
-  const isIncome = amount.trim().startsWith('+');
+function Transactions({ transactions }: { transactions: Transaction[] }) {
+  const router = useRouter();
+  const totalIncome = transactions.filter(transaction => transaction.type === 'income').reduce((acc, transaction) => acc + transaction.amount, 0);
+  const totalExpense = transactions.filter(transaction => transaction.type === 'expense').reduce((acc, transaction) => acc + transaction.amount, 0);
+  const totalBalance = totalIncome - totalExpense;
   return (
-    <TouchableOpacity onPress={onpress} style={styles.transactionContainer}>
-      <View style={styles.iconContainer}>
-        <Image source={icon} />
+    <View style={styles.transactionsContainer} >
+      <View style={styles.totalBalanceContainer} >
+        <Text style={styles.totalBalanceTitle}>Total Balance</Text>
+        <Text style={styles.totalBalance}>${totalBalance}</Text>
+
+        <View style={styles.addTransactionButtonContainer} >
+          <Pressable style={styles.addTransactionButton} onPress={() => {
+            router.push('/expense/add');
+          }} >
+            <Ionicons name="add" size={28} color="#2F7E79" />
+          </Pressable>
+        </View>
       </View>
-      <View style={styles.transactionNameandDate}>
-        <Text style={styles.transactionTitle}>{title}</Text>
-        <Text style={styles.transactionDate}>{date}</Text>
+
+      <View style={styles.transactionsListContainer}>
+        {
+          transactions.map((transaction) => (
+            <TransactionItem key={transaction.id} transaction={transaction} />
+          ))
+        }
       </View>
-      <Text style={styles.transactionAmount}>{amount}</Text>
-    </TouchableOpacity>
+    </View>
   )
 }
