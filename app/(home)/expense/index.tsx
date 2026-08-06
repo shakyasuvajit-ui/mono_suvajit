@@ -4,6 +4,7 @@ import { BackButton } from "@/components/back-button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import  Add  from "@/assets/svg/add_logo.svg";
 import  Pay  from "@/assets/svg/pay_logo.svg";
+import { router } from "expo-router";
 
 const styles = StyleSheet.create({
   container: {
@@ -145,7 +146,7 @@ export default function Expense() {
             <Text style={styles.balanceAmount}>$2,548.00</Text>
         </View>
           <View style={styles.transactionsLogoContainer}>
-            <TouchableOpacity style={styles.addLogoContainer}>
+            <TouchableOpacity style={styles.addLogoContainer} onPress={() => router.push('/expense/index')}>
               <Add/>
               <Text>Add</Text>
             </TouchableOpacity>

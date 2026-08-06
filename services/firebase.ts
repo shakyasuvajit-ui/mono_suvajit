@@ -1,6 +1,7 @@
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { FirebaseApp, getApp, getApps, initializeApp } from "firebase/app";
 import { Auth, createUserWithEmailAndPassword, getAuth, initializeAuth, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { Firestore, initializeFirestore } from "firebase/firestore";
 
 const firebaseAuth = require("firebase/auth");
 const persistence = typeof firebaseAuth?.getReactNativePersistence === "function" ? firebaseAuth.getReactNativePersistence(ReactNativeAsyncStorage) : undefined;
@@ -17,6 +18,7 @@ const firebaseConfig = {
 
 let app: FirebaseApp | null = null;
 let auth: Auth;
+let firestore: Firestore;
 // Initialize Firebase
 export function initializeFirebase() {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
@@ -26,7 +28,8 @@ export function initializeFirebase() {
     console.log("Error initializing auth", error);
     auth = getAuth(app);
   }
-  return { app, auth };
+  firestore=initializeFirestore(app,{});
+  return { app, auth, firestore };
 }
 
 
@@ -50,4 +53,4 @@ export function signOut() {
   return signOut();
 }
 
-export { app, auth };
+export { app, auth, firestore};
