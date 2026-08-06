@@ -42,9 +42,9 @@ return (
         }}
       />
       <Tabs.Screen
-        name="wallet"
+        name="expense"
         options={{
-          title: 'Wallet',
+          title: 'Expense',
           tabBarIcon: ({ color }) => (
             <Ionicons name="wallet-outline" size={28} color={color} />
           ),

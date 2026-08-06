@@ -1,14 +1,13 @@
 import Background from '@/assets/svg/onboarding_bg.svg';
+import { BackButton } from "@/components/back-button";
 import { Button } from '@/components/buttons';
 import { InputField } from '@/components/input-field';
-import { AntDesign } from '@expo/vector-icons';
+import { signIn } from "@/services/firebase";
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Link, useRouter } from 'expo-router';
-import Toast from 'react-native-toast-message';
-import { signIn } from "@/services/firebase";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton } from "@/components/back-button";
+import Toast from 'react-native-toast-message';
 
 
 
@@ -98,7 +97,7 @@ export default function Login() {
             setIsLoading(true);
             const user = await signIn(email, password);
             console.log("user", user);
-            router.push('/tabs/profile');
+            router.push('/(home)/profile');
         } catch (error) {
             Toast.show({
                 type: 'error',
