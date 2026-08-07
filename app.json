@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "default@54",
-    "slug": "default@54",
+    "slug": "mono",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "default54",
@@ -18,7 +18,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.shakyasuvajit.mono"
     },
     "web": {
       "output": "static",
@@ -43,6 +44,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "553aa301-b01b-43a2-a640-509e8b859940"
+      }
+    },
+    "owner": "suvajitshakya"
   }
 }
